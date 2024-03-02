@@ -10,8 +10,14 @@ let circles = []; // Array to store the positions of the circles
 let sliderOpacity; // Declare a variable for the opacity slider
 
 function setup() {
-    let cnv = createCanvas(400, 400);
+    // Assuming 'sketch-holder' is the ID of the container in your HTML
+    let sketchHolder = document.getElementById('sketch-holder');
+    let cnvWidth = sketchHolder.offsetWidth;
+    let cnvHeight = sketchHolder.offsetHeight;
+
+    let cnv = createCanvas(cnvWidth, cnvHeight);
     cnv.parent('sketch-holder'); // Move the canvas to the sketch-holder div
+
     colorMode(HSB, 360, 100, 100, 100);
 
     // Linking p5.js variables to HTML slider elements
@@ -98,7 +104,23 @@ function setColorVariation(circle) {
     circle.color = color(h, s, b + brightnessVariation); // No alpha value here
 }
 
-function createSliderText(slider, text) {
-    let sliderText = createP(text);
-    sliderText.position(slider.x + slider.width + 10, slider.y - 15);
+
+function windowResized() {
+    let sketchHolder = document.getElementById('sketch-holder');
+    let cnvWidth = sketchHolder.offsetWidth;
+    let cnvHeight = sketchHolder.offsetHeight;
+
+    resizeCanvas(cnvWidth, cnvHeight);
+
+    // Calculate the new center of the canvas
+    let newCenterX = cnvWidth / 2;
+    let newCenterY = cnvHeight / 2;
+
+    // Update the position of each circle relative to the new center
+    let radius = 50; // Assuming the radius for your shape layout remains constant
+    for (let i = 0; i < circles.length; i++) {
+        let angle = map(i, 0, circles.length, 0, TWO_PI);
+        circles[i].originalX = newCenterX + radius * cos(angle);
+        circles[i].originalY = newCenterY + radius * sin(angle);
+    }
 }
