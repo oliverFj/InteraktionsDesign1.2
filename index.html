@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sketch</title>
+
+    <link rel="stylesheet" href="tailwind-output.css" />
+
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+</head>
+
+<body class="bg-purple-200 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl text-center text-purple-500 font-bold mb-6">DreamArt Chart</h1>
+
+        <!-- Main content section with grid layout -->
+        <div class="flex flex-wrap -mx-2">
+
+            <!-- Input sliders section -->
+            <div class="w-full md:w-1/2 px-2">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+
+                    <form action="#" method="POST">
+
+                        
+                        <!-- Size Slider -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                What size do you associate with the dream?
+                            </label>
+                            <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="circleSizeSlider" min="10" max="100" value="10" step="1">
+                        </div>
+
+                        <!-- Randomness Slider -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                How well do you remember your dream?
+                            </label>
+                            <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="randomnessSlider" min="0" max="500" value="250" step="1">
+                        </div>
+
+                        <!-- Speed Slider -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                How positive or negative was your dream?
+                            </label>
+                            <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="speedSlider" min="0.000" max="0.01" value="0.005" step="0.0001">
+                        </div>
+
+                        <!-- Threshold Slider -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                How weird was your dream?
+                            </label>
+                            <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="thresholdSlider" min="0" max="100" value="50" step="1">
+                        </div>
+
+                        <!-- Opacity Slider -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                How vivid was your dream?
+                            </label>
+                            <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="opacitySlider" min="0" max="100" value="50" step="1">
+                        </div>
+
+                        <!-- Color Selector -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                Select a color for your dream:
+                            </label>
+                            <input class="w-full h-10 bg-purple-200 rounded-lg appearance-none cursor-pointer"
+                                type="color" id="colorSelector">
+                        </div>
+
+                        <!-- Dream Name Input -->
+                        <div class="mb-6">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                Name your dream:
+                            </label>
+                            <input
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                type="text" placeholder="Dream Name">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-center">
+                            <button
+                                class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="submit">
+                                Save Dream
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sketch Section -->
+            <div class="w-full md:w-1/2 px-2">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div id="sketch-holder" style="width: 400px; height: 400px;">
+                        <!-- p5.js sketch will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="sketch.js"></script>
+
+</body>
+
+</html>
+
+
+<!-- 
+                <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="circleSizeSlider">
+                <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="randomnessSlider">
+                <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="speedSlider">
+                <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="thresholdSlider">
+                <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range" id="opacitySlider">
+-->
