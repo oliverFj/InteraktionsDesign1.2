@@ -1,7 +1,7 @@
 // Her har jeg en anden array, lige som den i index.html.
 // Det er egentlig lidt noget sjusk at have to arrays, for de burde bare bruge den samme data.
 // Men det her var hurtigere i øjeblikket, og betyder ikke super meget. Hvis jeg havde et par
-// dage mere, ville jeg nok lave det om og koble det hele til en database.
+// dage mere, ville jeg lave det om og koble det hele til en database.
 
 var dreams = [
     { name: "Naptime Nonsense", x: 40, y: 20, color: "#C20CDB", size: 10 },
