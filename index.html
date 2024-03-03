@@ -238,12 +238,12 @@
         for (let id in sliders) {
             let slider = document.getElementById(id);
             slider.value = sliders[id];
-            slider.dispatchEvent(new Event('input'));  // This can help in triggering any attached event listeners.
+            slider.dispatchEvent(new Event('input'));  
         }
 
         let colorSelector = document.getElementById("colorSelector");
         colorSelector.value = dream.color;
-        colorSelector.dispatchEvent(new Event('input'));  // Similarly trigger change for color.
+        colorSelector.dispatchEvent(new Event('input'));  
     }
 </script>
 
