@@ -1,4 +1,4 @@
-// Definer variabler for skydere
+// Definer variabler for sliders
 let sliderOne; // Kontrollerer størrelsen af cirklerne
 let sliderTwo; // Kontrollerer tilfældigheden af cirkelpositioner
 let sliderThree; // Kontrollerer hastigheden af cirkelbevægelse
