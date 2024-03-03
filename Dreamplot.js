@@ -1,22 +1,14 @@
-// Define the array of dream objects
-
-/*
-"name": "Dream 1",
-"size": 20,
-"randomness": 100,
-"speed": 0.005,
-"threshold": 50,
-"opacity": 50,
-"color": "#619EC2"
-*/
-
+// Her har jeg en anden array, lige som den i index.html.
+// Det er egentlig lidt noget sjusk at have to arrays, for de burde bare bruge den samme data.
+// Men det her var hurtigere i øjeblikket, og betyder ikke super meget. Hvis jeg havde et par
+// dage mere, ville jeg nok lave det om og koble det hele til en database.
 
 var dreams = [
-    { name: "Dream 1", x: 10, y: 20, color: "#BF3F61", size: 30 },
-    { name: "Dream 2", x: 40, y: 60, color: "#639AA6", size: 20 },
-    { name: "Dream 3", x: 80, y: 10, color: "#547346", size: 40 },
-    { name: "Dream 4", x: 90, y: 80, color: "#F2B138", size: 20},
-    { name: "Dream 5", x: 30, y: 40, color: "#BF3636", size: 30 },
+    { name: "Naptime Nonsense", x: 40, y: 20, color: "#C20CDB", size: 10 },
+    { name: "Snooze Fest", x: 15, y: 40, color: "#639AA6", size: 50 },
+    { name: "Dreamland Doodles", x: 85, y: 55, color: "#0339A6", size: 30 },
+    { name: "Slumberland Shenanigans", x: 6, y: 60, color: "#F2B138", size: 15},
+    { name: "Odyssey of the Mind", x: 50, y: 90, color: "#574B13", size: 20 },
     // ... more dreams
 ];
 

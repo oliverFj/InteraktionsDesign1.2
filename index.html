@@ -7,24 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Title -->
-    <title>Sketch</title>
+    <title>DreamArt Chart</title>
 
     <!-- Stylesheet -->
+    <!-- Jeg har brugt tailwind til at style siden. Det er super praktisk at designe med,
+    for det håndterer en masse af den fnidder der er med responsivitet og css generelt.
+    Men det kan også være lidt besværligt at installere og sætte op korrekt, ligesom det tager
+    lidt tid at forstå hvordan syntaxen fungerer.-->
     <link rel="stylesheet" href="tailwind-output.css" />
 
     <!-- JavaScript libraries -->
+    <!-- Jeg bruger p5.js og d3.js til programmeringen-->
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script>
     <script src="libraries/d3.v7.js"></script>
+
 </head>
 
 <body class="bg-purple-200 font-sans"
     style="background-image: url('background.png'); background-position: top; background-size: inherit;"></body>
 
+
+<!-- Tailwind. Man skriver sin tailwind-css som class navne og bruger sådan noget som: px-4 og py-8. 
+    px-4 betyder padding til højre og ventre: 4 enheder (ikke pixel). py-8 er top og bund. -->
+
 <!-- Main container -->
 <div class="container mx-auto px-4 py-8">
-    <!-- Title -->
-    
+  
     <!-- Logo -->
     <img src="logo.png" alt="DreamArt Logo" class="mx-auto mb-6">
 
@@ -36,11 +45,14 @@
             <div class="bg-white bg-opacity-75 rounded-lg shadow-lg p-8">
 
                 <form action="#" method="POST">
+    
+                    <!-- Her har jeg tilføjet sliders. Jeg tilgår dem via deres id, der har et unikt navn.
+                    Herunder er det foreksempel "circleSizeSlider" -->
 
                     <!-- Size Slider -->
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">
-                            What size do you associate with the dream?
+                            How positive or negative was your dream?
                         </label>
                         <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range"
                             id="circleSizeSlider" min="10" max="100" value="10" step="1">
@@ -58,7 +70,7 @@
                     <!-- Speed Slider -->
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">
-                            How positive or negative was your dream?
+                            How calm or hectic was your dream?
                         </label>
                         <input class="w-full h-2 bg-purple-200 rounded-lg appearance-none cursor-pointer" type="range"
                             id="speedSlider" min="0.000" max="0.01" value="0.005" step="0.0001">
@@ -96,7 +108,7 @@
                         <label class="block text-gray-700 text-sm font-bold mb-2">
                             Name your dream:
                         </label>
-                        <input
+                        <input id="dreamNameInput"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             type="text" placeholder="Dream Name">
                     </div>
@@ -113,6 +125,7 @@
             </div>
         </div>
 
+        <!-- Her placerer jeg p5.js canvassen -->
         <!-- Sketch Section -->
         <div class="w-full md:w-2/5 pt-4 md:pl-4 md:pt-0 ">
             <div class="bg-white bg-opacity-75 rounded-lg shadow-lg py-2 px-2">
@@ -123,10 +136,12 @@
         </div>
     </div>
 </div>
+
+<!-- Her placerer jeg d3.js charten -->
+<!-- D3 Chart Container -->
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white bg-opacity-25 rounded-lg shadow-lg p-8 flex flex-wrap -mx-2">
-
-        <!-- D3 Chart Container -->
+   
         <div id="my_dataviz" class="mt-8" style="width: 100%; height: 400px;"></div>
 
         <div id="dataDisplay">Click on a circle to see its data here.</div>
@@ -134,89 +149,85 @@
 
 </div>
 
-<!-- add nyan.png to the left after the chart container-->
-
-<!-- add nyan.png to the left after the chart container -->
+<!-- nyancat image -->
 <img src="nyan.png" alt="Nyan Cat" class="float-left">
 
 
 
-<!-- JavaScript file -->
+<!-- JavaScript files -->
 <script src="sketch.js"></script>
 <script src="Dreamplot.js"></script>
 
 
 <script>
-    // Create an array of dream data that can be used to set the sliders and color
-
-    /*    
-    { name: "Dream 1", x: 10, y: 20, color: "#BF3F61", size: 30 },
-    { name: "Dream 2", x: 40, y: 60, color: "#639AA6", size: 20 },
-    { name: "Dream 3", x: 80, y: 10, color: "#547346", size: 40 },
-    { name: "Dream 4", x: 90, y: 80, color: "#F2B138", size: 20 },
-    { name: "Dream 5", x: 30, y: 40, color: "#BF3636", size: 30 },
-    */
-
+    // Her har jeg lavet en array med forskellige drømme. 
+    // Det er lidt "snyd", for optimalt ville vi have en database vi hentede og gemte dataen.
 
     var yourArray = [
         {
-            "name": "Dream 1",
-            "size": 20,
+            "name": "Naptime Nonsense",
+            "size": 10,
             "randomness": 100,
-            "speed": 0.005,
+            "speed": 0.003,
             "threshold": 20,
             "opacity": 100,
-            "color": "#BF3F61" 
+            "color": "#C20CDB" 
         },
         {
-            "name": "Dream 2",
-            "size": 20,
-            "randomness": 200,
+            "name": "Snooze Fest",
+            "size": 70,
+            "randomness": 150,
             "speed": 0.001,
             "threshold": 10,
             "opacity": 50,
             "color": "#639AA6" 
         },
         {
-            "name": "Dream 3",
+            "name": "Dreamland Doodles",
             "size": 40,
             "randomness": 300,
-            "speed": 0.01,
+            "speed": 0.0085,
             "threshold": 50,
             "opacity": 10,
-            "color": "#547346" 
+            "color": "#0339A6" 
         },
         {
-            "name": "Dream 4",
+            "name": "Slumberland Shenanigans",
             "size": 20,
-            "randomness": 400,
-            "speed": 0.005,
+            "randomness": 380,
+            "speed": 0.0005,
             "threshold": 80,
             "opacity": 80,
             "color": "#F2B138" 
         },
         {
-            "name": "Dream 5",
+            "name": "Odyssey of the Mind",
             "size": 30,
-            "randomness": 500,
+            "randomness": 450,
             "speed": 0.005,
             "threshold": 90,
             "opacity": 30,
-            "color": "#BF3636" 
+            "color": "#574B13" 
         }
     ];
+
+    // Når man vælger en drøm fra d3.js charten så sender den et "signal" med drømmens navn.
+    // Det sendes til denne funktion, der så finder drømmen i arrayet og får sliders og farve 
+    // til at matche drømmen ved at sende det videre til "setSlidersAndColor".
 
     function processArrayElementByName(elementName) {
         var element = yourArray.find(element => element.name === elementName);
         if (element) {
             setSlidersAndColor(element)
-            console.log(element); // Or update some DOM elements, etc.
+            let dreamNameInput = document.getElementById('dreamNameInput');
+            dreamNameInput.value = element.name;
+            console.log(element); 
         } else {
             console.log("Element not found");
         }
     }
 
-    //create a function that will set the sliders and color based on the dream data
+    //Function that sets the sliders and color based on the dream data
     function setSlidersAndColor(dream) {
         let sliders = {
             "circleSizeSlider": dream.size,
@@ -237,8 +248,6 @@
         colorSelector.dispatchEvent(new Event('input'));  // Similarly trigger change for color.
     }
 </script>
-
-
 
 </body>
 
