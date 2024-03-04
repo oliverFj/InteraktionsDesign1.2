@@ -1,93 +1,154 @@
-// Her har jeg en anden array, lige som den i index.html.
-// Det er egentlig lidt noget sjusk at have to arrays, for de burde bare bruge den samme data.
-// Men det her var hurtigere i øjeblikket, og betyder ikke super meget. Hvis jeg havde et par
-// dage mere, ville jeg lave det om og koble det hele til en database.
+/**
+ * Initialiserer et D3-diagram med drømmedata.
+ * 
+ * @param {Array} dreamData - Et array med drømmedata.
+ * @returns {Object} - Et objekt med en metode til at opdatere diagrammet.
+ */
 
-var dreams = [
-    { name: "Naptime Nonsense", x: 40, y: 20, color: "#C20CDB", size: 10 },
-    { name: "Snooze Fest", x: 15, y: 40, color: "#639AA6", size: 50 },
-    { name: "Dreamland Doodles", x: 85, y: 55, color: "#0339A6", size: 30 },
-    { name: "Slumberland Shenanigans", x: 6, y: 60, color: "#F2B138", size: 15},
-    { name: "Odyssey of the Mind", x: 50, y: 90, color: "#574B13", size: 20 },
-    // ... more dreams
-];
 
-// Set the initial dimensions and margins of the graph
-var margin = { top: 10, right: 30, bottom: 30, left: 40 },
-    width = document.getElementById("my_dataviz").clientWidth - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+/*
+    example array: min and max values for reference
+    "name": string
+    "size": min="10" max="100"
+    "randomness": min="0" max="500"
+    "speed": min="0.000" max="0.01"
+    "threshold": min="0" max="100"
+    "opacity": min="0" max="100"
+    "color": rgb
 
-// Define scales and SVG container globally
-var x = d3.scaleLinear().range([0, width]).domain([0, 100]),
-    y = d3.scaleLinear().range([height, 0]).domain([0, 100]);
+*/
 
-var svg = d3.select("#my_dataviz").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    function updateChart() {
-        // Update width and height based on the new window size
-        width = document.getElementById("my_dataviz").clientWidth - margin.left - margin.right;
-        height = document.getElementById("my_dataviz").clientHeight - margin.top - margin.bottom; // You may need to define a clientHeight for your container
-    
-        // Update the scales
-        x.range([0, width]);
-        y.range([height, 0]); // Update the y-scale if the height changes
-    
-        // Update SVG dimensions
-        d3.select("#my_dataviz").select("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom);
-    
-        // Update the x-axis position
-        svg.select(".x-axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
-    
-        // Update the y-axis in case the height has changed
-        svg.select(".y-axis").call(d3.axisLeft(y));
-    
-        // Update the circles' positions in case the scale has changed
-        svg.selectAll("circle")
-            .attr("cx", function(d) { return x(d.x); })
-            .attr("cy", function(d) { return y(d.y); });
+
+function initializeD3Chart(dreamData) {
+
+    // Funktion til at mappe en værdi til et nyt interval
+    // Det betyder at vi tager en værdi, der er i et interval, og mapper den til et nyt interval
+    // interval er et andet ord for område eller rækkevidde af værdier. Fra det mindste til det største.
+
+    // value er den værdi, vi vil mappe til det nye interval
+    // currentMin og currentMax er det nuværende interval, som value er i
+    // targetMin og targetMax er det nye interval, som value skal mappes til
+    function mapValueToRange(value, currentMin, currentMax, targetMin, targetMax) {
+        return ((value - currentMin) / (currentMax - currentMin)) * (targetMax - targetMin) + targetMin;
     }
 
-// Append the initial X and Y axes
-svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .attr("class", "x-axis");
+    // Funktion til at mappe værdierne i et objekt til et nyt interval
+    // Vi bruger denne funktion til at mappe værdierne i drømmedataene til det interval, vi vil bruge i diagrammet
+    // Det er en måde at transformere dataene, så de passer til det, vi vil vise i diagrammet
+    // size er foreksempel en værdi mellem 10 og 100, der skal mappes til et interval mellem 10 og 50
+    function mapValuesToRange(values) {
+        return {
+            name: values.name,
+            x: mapValueToRange(values.randomness, 0, 500, 0, 100),
+            y: mapValueToRange(values.speed, 0.000, 0.01, 0, 100),
+            size: mapValueToRange(values.size, 10, 100, 10, 50),
+            opacity: mapValueToRange(values.opacity, 0, 100, 0.2, 1), 
+            color: values.color
+        };
+    }
 
-svg.append("g")
-    .call(d3.axisLeft(y));
+    // Definér margener og størrelse på diagrammet
+    // Margenerne er de tomme rum omkring diagrammet
+    // Vi bruger dem til at placere akserne og diagrammet korrekt på siden
+    // Vi bruger også dem til at justere størrelsen på diagrammet, når vinduet ændrer størrelse
+    var margin = { top: 10, right: 30, bottom: 30, left: 40 },
+        width = document.getElementById("drommegraf").clientWidth - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
-// Add the initial dots
-svg.append('g')
-    .selectAll("dot")
-    .data(dreams)
-    .enter()
-    .append("circle")
-    .attr("cx", function (d) { return x(d.x); })
-    .attr("cy", function (d) { return y(d.y); })
-    .attr("r", function (d) { return d.size; })
-    .style("fill", function (d) { return d.color; })
-    .on('click', function(event, d) {
-        // Call the function defined in your HTML file, passing the name of the clicked element
-        processArrayElementByName(d.name);
-        displayData(d);
-    });
+    // Skaleringsfunktioner for x- og y-aksen
+    // Skaleringsfunktioner er funktioner, der tager en værdi og mapper den til et nyt interval
+  
+    var x = d3.scaleLinear().range([0, width]).domain([0, 100]),
+        y = d3.scaleLinear().range([height, 0]).domain([0, 100]);
 
-// Define the displayData function that updates the HTML content
-function displayData(data) {
-    // Assuming you have a div with id='dataDisplay' in your HTML
-    document.getElementById('dataDisplay').innerHTML = 'Name: ' + data.name + ', X: ' + data.x + ', Y: ' + data.y + ', Color: ' + data.color + ', Size: ' + data.size;
+    // Opret SVG-elementet til diagrammet
+    // .attr er en metode til at tilføje attributter til et element
+    // Vi tilføjer width og height til svg-elementet
+    // Vi tilføjer også et g-element til svg-elementet, som vi bruger til at gruppere elementer i diagrammet
+    // med elementer mener vi cirkler, akser og andet, der skal vises i diagrammet
+
+    var svg = d3.select("#drommegraf").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Funktion til at opdatere diagrammet med nye data
+    // Vi bruger denne funktion til at tilføje nye cirkler til diagrammet, når der kommer nye data
+    // Vi bruger også denne funktion til at fjerne cirkler, der ikke længere er i data
+
+    function updateChart(newData) {
+        if (newData) {
+            // Map de nye data til det ønskede interval
+            var processedDreams = newData.map(d => mapValuesToRange(d));
+            var circle = svg.selectAll("circle").data(processedDreams);
+
+            // Tilføj nye cirkler for de nye data
+            var enterCircle = circle.enter().append("circle")
+                .attr("cx", d => x(d.x))
+                .attr("cy", d => y(d.y))
+                .attr("r", d => d.size)
+                .style("fill", d => d.color)
+                .style("fill-opacity", d => d.opacity) 
+                .on('click', (event, d) => {
+                    processArrayElementByName(d.name);
+                   // displayData(d);
+                })
+                .on('mouseover', function (event, d) {
+                    d3.select(this).transition()
+                        .duration(100)
+                        .attr("r", d.size * 1.5);
+                })
+                .on('mouseout', function (event, d) {
+                    d3.select(this).transition()
+                        .duration(100)
+                        .attr("r", d.size);
+                });
+
+            // Opdater eksisterende cirkler med nye data
+            circle.call(update => update.transition()
+                                        .attr("cx", d => x(d.x))
+                                        .attr("cy", d => y(d.y))
+                                        .attr("r", d => d.size)
+                                        .style("fill", d => d.color)
+                                        .style("fill-opacity", d => d.opacity)); 
+
+            // Fjern cirkler, der ikke længere er i data
+            circle.exit().remove();
+        }
+
+        // Opdater bredden af diagrammet ved ændring af vinduets størrelse
+        width = document.getElementById("drommegraf").clientWidth - margin.left - margin.right;
+        x.range([0, width]);
+        svg.select("#drommegraf svg").attr("width", width + margin.left + margin.right);
+        svg.select(".x-axis").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+        svg.select(".y-axis").call(d3.axisLeft(y));
+    }
+
+    // Tilføj x- og y-akse til diagrammet
+    svg.append("g")
+       .attr("transform", "translate(0," + height + ")")
+       .call(d3.axisBottom(x))
+       .attr("class", "x-axis");
+
+    svg.append("g")
+       .call(d3.axisLeft(y));
+
+    // Funktion til at vise data for en cirkel ved klik
+    function displayData(data) {
+        // Opdater teksten under grafen med data for cirklen 
+        document.getElementById('dataDisplay').innerHTML = `Name: ${data.name}, X: ${data.x}, Y: ${data.y}, Color: ${data.color}, Size: ${data.size}`;
+    }
+
+    // Opdater diagrammet med de initialiserede data
+    updateChart(dreamData);
+
+    // Lyt efter ændringer i vinduets størrelse og opdater diagrammet
+    window.addEventListener("resize", () => updateChart(dreamData));
+
+    // Returnér metoden til at opdatere diagrammet
+    return {
+        updateChart: updateChart
+    };
 }
-
-// Initial update to configure everything correctly
-updateChart();
-
-// Listen to resize events
-window.addEventListener("resize", updateChart);

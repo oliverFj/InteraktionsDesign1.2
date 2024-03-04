@@ -1,9 +1,9 @@
 // Definer variabler for sliders
-let sliderOne; // Kontrollerer størrelsen af cirklerne
-let sliderTwo; // Kontrollerer tilfældigheden af cirkelpositioner
-let sliderThree; // Kontrollerer hastigheden af cirkelbevægelse
-let sliderFour; // Kontrollerer tærsklen for at tegne linjer mellem cirkler
-let colorPicker; // Kontrollerer farven på cirklerne
+let sliderOne; // størrelsen af cirklerne
+let sliderTwo; // tilfældigheden af cirkelpositioner
+let sliderThree; // hastigheden af cirkelbevægelse
+let sliderFour; // tærsklen for at tegne linjer mellem cirkler
+let colorPicker; // farven på cirklerne
 
 let circles = []; // Array til at gemme positionerne af cirklerne
 
@@ -18,6 +18,8 @@ function setup() {
     let cnv = createCanvas(cnvWidth, cnvHeight);
     cnv.parent('sketch-holder');
 
+    // HSB betyder Hue, Saturation, Brightness
+    // Det er en anden måde at repræsentere farver på end RGB
     colorMode(HSB, 360, 100, 100, 100);
 
     // Link p5.js variabler til HTML sliders
@@ -29,6 +31,14 @@ function setup() {
     colorPicker = select('#colorSelector'); // Farve
 
     // Generer cirkler
+    // Det gør vi ved at bruge en for-loop til at oprette 40 cirkler
+
+    // Hver cirkel får en position på en cirkel omkring midten af lærredet
+    // Vi gemmer positionen for hver cirkel i et objekt og gemmer objektet i et array
+    // Vi bruger også perlin noise til at skabe en tilfældig bevægelse for hver cirkel
+    // Den tilfældige bevægelse er baseret på en offset, der ændrer sig over tid
+    // Vi bruger også en funktion til at tilføje en lille variation i farven for hver cirkel
+
     for (let i = 0; i < 40; i++) {
         let radius = 50;
         let angle = map(i, 0, 20, 0, TWO_PI);
@@ -55,8 +65,16 @@ function draw() {
     background(220);
 
     // Juster cirkel- og linjetegningskoden til at anvende gennemsigtighed
+    // Det gør vi på denne måde fordi vi vil have cirklerne og linjerne til at have forskellig gennemsigtighed
+    // Vi vil også have at cirklerne og linjerne har samme farve
+    // Vi bruger en for-løkke til at tegne hver cirkel og justere dens position baseret på perlin noise
+
     for (let circle of circles) {
         let randomness = sliderTwo.value();
+
+        //perlin noise til at skabe en tilfældig bevægelse
+        //perlin noise er en metode til at skabe tilfældige værdier, der ændrer sig flydende over tid
+        //Det er nyttigt til at skabe realistiske tilfældige bevægelser i animationer
         circle.randomX = noise(circle.noiseOffsetX + frameCount * sliderThree.value()) * randomness - randomness / 2;
         circle.randomY = noise(circle.noiseOffsetY + frameCount * sliderThree.value()) * randomness - randomness / 2;
         let x = circle.originalX + circle.randomX;
@@ -84,22 +102,27 @@ function draw() {
 }
 
 // laver en lille forskel i farven på cirklerne
+// denne kode er i en separat funktion, så vi kan kalde den igen, når farven ændres
+// i andre projekter kan du bruge denne funktion til at ændre farven på en genstand(circle), 
+// når den bliver klikket på.
 function setColorVariation(circle) {
     let baseColor = colorPicker.value(); // Få farveværdien som en string
     let rgbColor = color(baseColor); // Konverter string til en p5 farve
 
-    colorMode(HSB); // Sørg for at farvetilstand er HSB
+    colorMode(HSB); // Sørg for at farvetilstand er HSB fordi vi vil ændre lysstyrken
 
     let h = hue(rgbColor);
     let s = saturation(rgbColor);
     let b = brightness(rgbColor);
 
-    // Skab en lille variation i lysstyrken for hver cirkel
+    // Skab en lille variation i lysstyrken for hver cirkel for at gøre dem forskellige
     let brightnessVariation = map(noise(circle.noiseOffsetX), 0, 1, -15, 15);
     circle.color = color(h, s, b + brightnessVariation); 
 }
 
-// sørger for at figuren altid er centreret i forhold til skærmstørrelsen.
+// sørger for at figuren altid er centreret i forhold til skærmstørrelsen. 
+// det er en god ide at have denne funktion i alle dine p5.js projekter
+
 function windowResized() {
     let sketchHolder = document.getElementById('sketch-holder');
     let cnvWidth = sketchHolder.offsetWidth;
