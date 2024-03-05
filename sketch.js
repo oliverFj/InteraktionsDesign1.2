@@ -65,9 +65,9 @@ function draw() {
     background(220);
 
     // Juster cirkel- og linjetegningskoden til at anvende gennemsigtighed
-    // Det gør vi på denne måde fordi vi vil have cirklerne og linjerne til at have forskellig gennemsigtighed
+    // Fordi vi vil have cirklerne og linjerne til at have forskellig gennemsigtighed (fordi det ser pænest ud)
     // Vi vil også have at cirklerne og linjerne har samme farve
-    // Vi bruger en for-løkke til at tegne hver cirkel og justere dens position baseret på perlin noise
+    // Vi bruger en for-loop til at tegne hver cirkel og justere dens position baseret på perlin noise
 
     for (let circle of circles) {
         let randomness = sliderTwo.value();
@@ -104,7 +104,7 @@ function draw() {
 // laver en lille forskel i farven på cirklerne
 // denne kode er i en separat funktion, så vi kan kalde den igen, når farven ændres
 // i andre projekter kan du bruge denne funktion til at ændre farven på en genstand(circle), 
-// når den bliver klikket på.
+// når den foreksempel bliver klikket på.
 function setColorVariation(circle) {
     let baseColor = colorPicker.value(); // Få farveværdien som en string
     let rgbColor = color(baseColor); // Konverter string til en p5 farve
